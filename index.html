@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
+<link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+<template id="banner">
+
+███████╗ ██╗   ██╗ ███╗   ██╗  ██████╗  ██╗ ██╗    ██╗ ███╗   ██╗ ██╗     
+██╔════╝ ██║   ██║ ████╗  ██║ ██╔════╝  ██║ ██║    ██║ ████╗  ██║ ██║     
+█████╗   ██║   ██║ ██╔██╗ ██║ ██║  ███╗ ██║ ██║ █╗ ██║ ██╔██╗ ██║ ██║     
+██╔══╝   ██║   ██║ ██║╚██╗██║ ██║   ██║ ██║ ██║███╗██║ ██║╚██╗██║ ██║     
+██║      ╚██████╔╝ ██║ ╚████║ ╚██████╔╝ ██║ ╚███╔███╔╝ ██║ ╚████║ ███████╗
+╚═╝       ╚═════╝  ╚═╝  ╚═══╝  ╚═════╝  ╚═╝  ╚══╝╚══╝  ╚═╝  ╚═══╝ ╚══════╝ v1.0
+
+
+Hi! I'm Brian. I'm a software test engineer based in Melbourne, Australia.
+
+Type 'help' to see list of available commands
+
+-- 
+</template>
+<template id="cv">
+(\ 
+\'\ 
+ \'\     __________  
+ / '|   ()_________)
+ \ '/    \ ~~~~~~~~ \         https://github.com/fungiwnl/cv/blob/main/cv.pdf
+   \       \ ~~~~~~   \
+   ==).      \__________\
+  (__)       ()__________)
+
+</template>
+<template id="email">
+    _
+    |E]
+  .-|=====-.     brianf.iwnl@gmail.com
+  | | MAIL |   
+  |________|___
+       ||
+       ||
+       ||   www                %%%
+vwv    ||   )_(,;;;,        ,;,\_/ www
+)_(    ||   \|/ \_/         )_(\|  (_)
+\|   \ || /\\|/  |/         \| \|// | 
+___\|//jgs||//_\V/_\|//_______\\|//V/\\|/__
+</template>
+<template id="linkedin">
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░████░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░████░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░▄▄▄▄▄▄▄▄▄░░░░░░░░░
+    ░░░░░░░████░░████████████░░░░░░░
+    ░░░░░░░████░░█████▀▀▀█████░░░░░░
+    ░░░░░░░████░░█████░░░░████░░░░░░
+    ░░░░░░░████░░█████░░░░████░░░░░░
+    ░░░░░░░████░░█████░░░░████░░░░░░
+    ░░░░░░░████░░█████░░░░████░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+    ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+</template>
+<template id="github">
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    @@@@@@@@@@@@@@@@%######%@@@@@@@@@@@@@@@@
+    @@@@@@@@@@@@*=:.        .:=#@@@@@@@@@@@@
+    @@@@@@@@@#-.     ......     .=%@@@@@@@@@
+    @@@@@@@%-   -:.          .:-   =@@@@@@@@
+    @@@@@@#. . -@@@*+**##**+#@@@-   .%@@@@@@
+    @@@@@%. .  -@@@@@@@@@@@@@@@@-  . .%@@@@@
+    @@@@@- .  :%@@@@@@@@@@@@@@@@%.  . =@@@@@
+    @@@@@.    *@@@@@@@@@@@@@@@@@@+    .@@@@@
+    @@@@@.    +@@@@@@@@@@@@@@@@@@+    .@@@@@
+    @@@@@:    .%@@@@@@@@@@@@@@@@%.    -@@@@@
+    @@@@@#   .  +%@@@@@@@@@@@@%+.     #@@@@@
+    @@@@@@+  =*=  .:+@@@@@@+-:       *@@@@@@
+    @@@@@@@#. .%#===#@@@@@@*   .   .#@@@@@@@
+    @@@@@@@@@+. -+*+@@@@@@@#     :+@@@@@@@@@
+    @@@@@@@@@@@#-.  #@@@@@@# .:=#@@@@@@@@@@@
+    @@@@@@@@@@@@@@%%@@@@@@@@%%@@@@@@@@@@@@@@
+    @@@@@ https://github.com/fungiwnl @@@@@@
+    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+</template>
+    <script>
+        $('body').terminal({
+            help: function() {
+                this.echo('\nAvailable commands: ' +
+                          'about, projects, cv, email, github, help, linkedin');
+                this.echo('\n[ctrl+l] to clear the terminal' +
+                          '\n[ctrl+c] to cancel the command');
+            },
+            about: function() {
+                this.echo(banner.innerHTML)
+            },
+            projects: function() {
+                this.echo("\nProjects I've worked on:\n" +
+                          "\nKmart Online Australia https://www.kmart.com.au/" + 
+                          "\nKmart Online New Zealand https://www.kmart.co.nz/" + 
+                          "\nScouts Terrain https://terrain.scouts.com.au/" +
+                          "\nService Victoria (iOS/Android)" + 
+                          "\nBeyondNow (iOS/Android) https://www.beyondblue.org.au/get-support/beyondnow-suicide-safety-planning" +
+                          "\nCovidcare (iOS/Android) https://www.covidcare.io/" +
+                          "\nAlthea Concierge https://althea.life/concierge/" +
+                          "\nOddbods iOS https://www.weyo.app/oddbods-oddlife-app-safety/" +
+                          "\nSesame Street Yourself iOS https://www.weyo.app/sesame-street-yourself-app-safety/" +
+                          "\nWiggles Fun Time with Faces iOS/Android https://www.weyo.app/wiggles-app-safety/ " +
+                          "\nSuperwhy https://pbskids.org/superwhy/" +
+                          "\nVerizon Digital Kiosk https://www.twobulls.com/projects/verizon-digital-kiosk");
+            },
+            cv: function() {
+                this.echo(cv.innerHTML)
+            },
+            email: function() {
+                this.echo(email.innerHTML)
+            },
+            github: function() {
+                this.echo(github.innerHTML)
+            },
+            linkedin: function() {
+                this.echo('\n' +
+                          '   https://au.linkedin.com/in/fungiwnl');
+                this.echo(linkedin.innerHTML)
+            }
+        },
+        {
+            greetings: banner.innerHTML
+        });
+        </script>
+</body>
+</html>
