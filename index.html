@@ -88,7 +88,7 @@ https://github.com/fungiwnl
         $('body').terminal({
             help: function() {
                 this.echo('\nAvailable commands: ' +
-                          'about, projects, cv, email, github, help, linkedin');
+                          'about, projects, cv, email, github, help, linkedin, weather');
                 this.echo('\n[ctrl+l] to clear the terminal' +
                           '\n[ctrl+c] to cancel the command');
             },
@@ -142,7 +142,12 @@ https://github.com/fungiwnl
             },
             linkedin: function() {
                 this.echo(linkedin.innerHTML)
-            }
+            },
+            weather: function() {
+                this.echo('\n')
+                return fetch("https://wttr.in/?format=%l:+%m+%c+%C+%t+%f+%p").then(res => res.text());
+              
+            },
         },
         {
             greetings: introBanner.innerHTML
