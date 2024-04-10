@@ -357,8 +357,8 @@ terminal .terminal-output > div {
     margin-top: -1px;
 }
 .terminal-output > div.raw > div * {
-    overflow-wrap: break-word;
-    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    word-wrap: anywhere;
 }
 .terminal .terminal-font {
     position: absolute;
