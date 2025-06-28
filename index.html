@@ -4,34 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Brian's interactive terminal portfolio - DevOps Engineer based in Melbourne, Australia">
-    <meta name="author" content="Brian">
-    <meta name="keywords" content="devops engineer, software engineer, portfolio, terminal, melbourne, australia">
-    
     <title>Brian - DevOps Engineer</title>
     
-    <!-- Preconnect to external domains for better performance -->
-    <link rel="preconnect" href="https://code.jquery.com">
-    <link rel="preconnect" href="https://unpkg.com">
-    <link rel="preconnect" href="https://wttr.in">
-    
-    <!-- Updated mobile-optimized CSS -->
-    <link rel="stylesheet" href="style.css">
-    
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
-            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
-            crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/jquery.terminal@2.35.2/js/jquery.terminal.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/jquery.terminal/js/jquery.terminal.min.js"></script>
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
-    <!-- Terminal Data Templates -->
-    <script type="text/template" id="intro-banner">
+    <template id="introBanner">
     ██████╗  ███████╗
     ██╔══██╗ ██╔════╝
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.1  
+    ╚═════╝  ╚═╝ term v1.2  
    
    
 Hi 👋 ! 
@@ -43,26 +29,28 @@ I'm Brian. I'm a DevOps engineer based in Melbourne, Australia.
 Type 'help' to see list of available commands
 
 -- 
-    </script>
+    </template>
 
-    <script type="text/template" id="about-banner">
+    <template id="aboutBanner">
     ██████╗  ███████╗
     ██╔══██╗ ██╔════╝
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.1  
+    ╚═════╝  ╚═╝ term v1.2  
    
    
 Hi 👋 ! 
 
-I'm Brian. I'm a DevOps engineer based in Melbourne, Australia.
+I'm Brian. I'm a DevOps engineer based in 
+Melbourne, Australia.
 
-With expertise in web, mobile, and embedded testing across diverse industries
-including retail, healthcare, government, and entertainment.
-    </script>
+With experience in web, mobile, embedded across diverse 
+industries including retail, healthcare, government and 
+entertainment.
+    </template>
 
-    <script type="text/template" id="cv-content">
+    <template id="cv">
 📄 My CV/Resume:
 
 https://github.com/fungiwnl/cv/blob/main/cv.pdf
@@ -75,9 +63,9 @@ https://github.com/fungiwnl/cv/blob/main/cv.pdf
        \       \ ~~~~~~   \
        ==).      \__________\
       (__)       ()__________)
-    </script>
+    </template>
 
-    <script type="text/template" id="email-content">
+    <template id="email">
 📧 Get in touch:
 
 brianf.iwnl@gmail.com
@@ -94,431 +82,101 @@ brianf.iwnl@gmail.com
     )_(    ||   \|/ \_/         )_(\|  (_)
     \|   \ || /\\|/  |/         \| \|// | 
     ___\|//jgs||//_\V/_\|//_______\\|//V/\\|/__
-    </script>
+    </template>
 
-    <script type="text/template" id="linkedin-content">
+    <template id="linkedin">
 🔗 LinkedIn Profile:
  
 https://au.linkedin.com/in/fungiwnl
-    </script>
+    </template>
 
-    <script type="text/template" id="github-content">
+    <template id="github">
 💻 GitHub Profile:
     
 https://github.com/fungiwnl
-    </script>
+    </template>
 
     <script>
-        const TERMINAL_CONFIG = {
-            version: 'v1.1',
-            author: 'Brian',
-            location: 'Melbourne, Australia',
-            role: 'DevOps Engineer',
-            email: 'brianf.iwnl@gmail.com',
-            github: 'https://github.com/fungiwnl',
-            linkedin: 'https://au.linkedin.com/in/fungiwnl',
-            cv: 'https://github.com/fungiwnl/cv/blob/main/cv.pdf'
-        };
-
-        const PROJECTS = [
-            {
-                name: 'Kmart Australia',
-                url: 'https://www.kmart.com.au',
-                type: 'Web',
-                description: 'E-commerce platform testing'
+        const projects = [
+            { name: 'Kmart Australia', url: 'https://www.kmart.com.au', type: 'Web' },
+            { name: 'Kmart New Zealand', url: 'https://www.kmart.co.nz', type: 'Web' },
+            { name: 'Release Me', type: 'Web - Defunct', defunct: true },
+            { name: 'Scouts Terrain', url: 'https://terrain.scouts.com.au/', type: 'Web' },
+            { 
+                name: 'Service Victoria', 
+                ios: 'https://apps.apple.com/au/app/service-victoria/id1438062029',
+                android: 'https://play.google.com/store/apps/details?id=au.gov.vic.service.digitalwallet.citizen&hl=en_AU&gl=US',
+                type: 'Mobile App'
             },
-            {
-                name: 'Kmart New Zealand',
-                url: 'https://www.kmart.co.nz',
-                type: 'Web',
-                description: 'E-commerce platform testing'
-            },
-            {
-                name: 'Release Me',
-                type: 'Web',
-                status: 'defunct',
-                description: 'Release management platform (ceased operations)'
-            },
-            {
-                name: 'Scouts Terrain',
-                url: 'https://terrain.scouts.com.au/',
-                type: 'Web',
-                description: 'Scouting activity management'
-            },
-            {
-                name: 'Service Victoria',
-                urls: {
-                    ios: 'https://apps.apple.com/au/app/service-victoria/id1438062029',
-                    android: 'https://play.google.com/store/apps/details?id=au.gov.vic.service.digitalwallet.citizen&hl=en_AU&gl=US'
-                },
-                type: 'Mobile App',
-                description: 'Government services digital wallet'
-            },
-            {
-                name: '28 by Sam Wood',
-                url: 'https://apps.apple.com/au/app/28-by-sam-wood/id1343415654',
-                type: 'iOS App',
-                description: 'Fitness and wellness application'
-            },
+            { name: '28 by Sam Wood', url: 'https://apps.apple.com/au/app/28-by-sam-wood/id1343415654', type: 'iOS App' },
             {
                 name: 'BeyondNow',
-                urls: {
-                    ios: 'https://apps.apple.com/au/app/beyondnow-suicide-safety-plan/id1059270058',
-                    android: 'https://play.google.com/store/apps/details?id=au.org.beyondblue.beyondnow&gl=US'
-                },
-                type: 'Mobile App',
-                description: 'Mental health safety planning app'
+                ios: 'https://apps.apple.com/au/app/beyondnow-suicide-safety-plan/id1059270058',
+                android: 'https://play.google.com/store/apps/details?id=au.org.beyondblue.beyondnow&gl=US',
+                type: 'Mobile App'
             },
-            {
-                name: 'CovidCare',
-                type: 'Mobile App',
-                status: 'defunct',
-                description: 'COVID-19 health monitoring (ceased operations)'
-            },
-            {
-                name: 'Althea Concierge',
-                url: 'https://althea.life/',
-                type: 'Web',
-                status: 'defunct',
-                description: 'Healthcare concierge platform (ceased operations)'
-            },
-            {
-                name: 'Oddbods Oddlife',
-                url: 'https://apps.apple.com/us/app/oddbods-oddlife-daily-games/id1481150332',
-                type: 'iOS Game',
-                description: 'Daily games and activities'
-            },
-            {
-                name: 'Sesame Street Yourself',
-                url: 'https://apps.apple.com/au/app/sesame-street-yourself/id1475571420',
-                type: 'iOS Game',
-                description: 'Educational children\'s game'
-            },
-            {
-                name: 'The Wiggles FTWF',
-                url: 'https://apps.apple.com/au/app/the-wiggles-fun-time-faces/id1385364625',
-                type: 'iOS App',
-                description: 'Children\'s entertainment app'
-            },
-            {
-                name: 'Superwhy',
-                url: 'https://pbskids.org/superwhy/',
-                type: 'Web Game',
-                description: 'Educational web games'
-            },
-            {
-                name: 'Verizon Digital Kiosk',
-                url: 'https://www.twobulls.com/projects/verizon-digital-kiosk',
-                type: 'Embedded OS',
-                description: 'Interactive retail kiosk system'
-            }
+            { name: 'CovidCare', type: 'Mobile App - Defunct', defunct: true },
+            { name: 'Althea Concierge', url: 'https://althea.life/', type: 'Web - Defunct', defunct: true },
+            { name: 'Oddbods Oddlife', url: 'https://apps.apple.com/us/app/oddbods-oddlife-daily-games/id1481150332', type: 'iOS Game' },
+            { name: 'Sesame Street Yourself', url: 'https://apps.apple.com/au/app/sesame-street-yourself/id1475571420', type: 'iOS Game' },
+            { name: 'The Wiggles FTWF', url: 'https://apps.apple.com/au/app/the-wiggles-fun-time-faces/id1385364625', type: 'iOS App' },
+            { name: 'Superwhy', url: 'https://pbskids.org/superwhy/', type: 'Web Game' },
+            { name: 'Verizon Digital Kiosk', url: 'https://www.twobulls.com/projects/verizon-digital-kiosk', type: 'Embedded OS' }
         ];
 
-        // Utility functions
-        function getTemplate(id) {
-            const template = document.getElementById(id);
-            return template ? template.innerHTML : '';
-        }
-
-        function formatProjectLinks(project) {
-            if (project.status === 'defunct' && project.url) {
-                return `${project.name} ([[!;;;;${project.url}]${project.type} - Defunct])`;
-            }
-            else if (project.status === 'defunct') {
-                return `${project.name} (${project.type} - Defunct)`;
-            }
-            
-            if (project.urls) {
-                // Multiple URLs (iOS/Android)
-                const links = Object.entries(project.urls)
-                    .map(([platform, url]) => `[[!;;;;${url}]${platform.charAt(0).toUpperCase() + platform.slice(1)}]`)
-                    .join('/');
-                return `${project.name} (${links})`;
-            } else {
+        function formatProject(project) {
+            if (project.defunct) {
+                return `${project.name} (${project.type})`;
+            } else if (project.ios && project.android) {
+                return `${project.name} ([[!;;;;${project.ios}]iOS]/[[!;;;;${project.android}]Android])`;
+            } else if (project.url) {
                 return `${project.name} ([[!;;;;${project.url}]${project.type}])`;
             }
+            return `${project.name} (${project.type})`;
         }
 
-        async function fetchWeather() {
-            try {
-                const response = await fetch("https://wttr.in/?format=%l:+%m+%c+%C+%t+%f+%p");
-                if (!response.ok) {
-                    throw new Error(`Weather service unavailable (${response.status})`);
-                }
-                return await response.text();
-            } catch (error) {
-                return `🌤️  Weather service temporarily unavailable.\nError: ${error.message}`;
-            }
-        }
-
-        const terminalCommands = {
-            help() {
+        $('body').terminal({
+            help: function() {
                 this.echo('\n📋 Available commands:');
-                this.echo('  about     - Learn more about me');
-                this.echo('  projects  - View my project portfolio');
-                this.echo('  cv        - Download my CV/resume');
-                this.echo('  email     - Get my contact email');
-                this.echo('  github    - Visit my GitHub profile');
-                this.echo('  linkedin  - View my LinkedIn profile');
-                this.echo('  weather   - Check current weather');
-                this.echo('  help      - Show this help message');
-                this.echo('\n⌨️  Keyboard shortcuts:');
-                this.echo('  [Ctrl+L]  - Clear the terminal');
-                this.echo('  [Ctrl+C]  - Cancel current command');
-                this.echo('  [Tab]     - Auto-complete commands');
+                this.echo('  about, projects, cv, email, github, linkedin, weather, help');
+                this.echo('\n⌨️  Shortcuts:');
+                this.echo('  [ctrl+l] to clear the terminal');
+                this.echo('  [ctrl+c] to cancel the command');
             },
-
-            about() {
-                this.echo(getTemplate('about-banner'));
+            about: function() {
+                this.echo(aboutBanner.innerHTML);
             },
-
-            projects() {
-                this.echo('\n💼 Project Portfolio:');
-                this.echo('\nHere are some notable projects I\'ve worked on:\n');
+            projects: function() {
+                this.echo('\n💼 Project Portfolio:\n');
+                this.echo('Here are some notable projects I\'ve worked on:\n');
                 
-                PROJECTS.forEach(project => {
-                    this.echo(`• ${formatProjectLinks(project)}`);
-                    if (project.description) {
-                        this.echo(`  ${project.description}`);
-                    }
-                    this.echo('');
+                projects.forEach(project => {
+                    this.echo(`• ${formatProject(project)}`);
                 });
             },
-
-            cv() {
-                this.echo(getTemplate('cv-content'));
+            cv: function() {
+                this.echo(cv.innerHTML);
             },
-
-            email() {
-                this.echo(getTemplate('email-content'));
+            email: function() {
+                this.echo(email.innerHTML);
             },
-
-            github() {
-                this.echo(getTemplate('github-content'));
+            github: function() {
+                this.echo(github.innerHTML);
             },
-
-            linkedin() {
-                this.echo(getTemplate('linkedin-content'));
+            linkedin: function() {
+                this.echo(linkedin.innerHTML);
             },
-
-            async weather() {
+            weather: function() {
                 this.echo('\n🌤️  Fetching weather information...\n');
-                return await fetchWeather();
+                return fetch("https://wttr.in/?format=%l:+%m+%c+%C+%t+%f+%p").then(res => res.text());
             },
-
-            version() {
-                this.echo(`\n🔧 Terminal ${TERMINAL_CONFIG.version}`);
-                this.echo(`Built by ${TERMINAL_CONFIG.author}`);
-                this.echo('Powered by jQuery Terminal');
-            },
-
-            clear() {
+            clear: function() {
                 this.clear();
             }
-        };
-
-        $(document).ready(function() {
-            const terminalOptions = {
-                greetings: getTemplate('intro-banner'),
-                prompt: '$ ',
-                completion: Object.keys(terminalCommands),
-                keymap: {
-                    'CTRL+L': function() {
-                        this.clear();
-                    }
-                },
-                onInit: function() {
-                    console.log('Terminal initialized successfully');
-                },
-                onCommandNotFound: function(command) {
-                    this.echo(`Command '${command}' not found. Type 'help' for available commands.`);
-                }
-            };
-
-            const terminal = $('body').terminal(terminalCommands, terminalOptions);
-            
-            setTimeout(() => {
-                // Override the click handler at the jQuery Terminal level
-                if (terminal.click) {
-                    terminal.click = function() {
-                        // Just focus, don't create new command lines
-                        terminal.focus(true);
-                        return terminal;
-                    };
-                }
-                
-                // Override any internal command line creation
-                if (terminal.cmd) {
-                    const originalCmd = terminal.cmd;
-                    terminal.cmd = function() {
-                        // Only allow if there's no existing command line
-                        const existingCmds = $('.cmd');
-                        if (existingCmds.length === 0) {
-                            return originalCmd.apply(this, arguments);
-                        }
-                        return terminal;
-                    };
-                }
-                
-                // Completely block the terminal's mouse event system
-                const $terminal = $('.terminal');
-                
-                // Remove ALL event handlers jQuery Terminal attached
-                $terminal.off();
-                
-                // Add our controlled handlers that allow focus but prevent duplicates
-                $terminal.on('click dblclick', function(e) {
-                    // Allow the click but focus terminal and prevent duplicates
-                    terminal.focus(true);
-                    
-                    // Clean up any duplicates that might have been created
-                    setTimeout(nuclearCleanup, 1);
-                });
-                
-            }, 100);
-            
-            function nuclearCleanup() {
-                const cmds = $('.cmd');
-                const clipboards = $('.cmd-clipboard');
-                const prompts = $('.cmd-prompt');
-                
-                if (cmds.length > 1) {
-                    console.log(`NUCLEAR: Removing ${cmds.length - 1} duplicate command lines`);
-                    cmds.slice(0, -1).each(function() {
-                        $(this).remove();
-                    });
-                }
-                
-                if (clipboards.length > 1) {
-                    clipboards.slice(0, -1).each(function() {
-                        $(this).remove();
-                    });
-                }
-                
-                if (prompts.length > 1) {
-                    prompts.slice(0, -1).each(function() {
-                        $(this).remove();
-                    });
-                }
-            }
-            
-            // Run cleanup less aggressively now that we allow clicking
-            setInterval(nuclearCleanup, 100); // Every 100ms instead of 50ms
-            
-            // Also run on any DOM change
-            const nuclearObserver = new MutationObserver(function(mutations) {
-                let needsCleanup = false;
-                mutations.forEach(function(mutation) {
-                    if (mutation.addedNodes.length > 0) {
-                        for (let node of mutation.addedNodes) {
-                            if (node.nodeType === Node.ELEMENT_NODE) {
-                                if (node.classList.contains('cmd') || 
-                                    node.querySelector && node.querySelector('.cmd')) {
-                                    needsCleanup = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                });
-                
-                if (needsCleanup) {
-                    setTimeout(nuclearCleanup, 10);
-                }
-            });
-            
-            nuclearObserver.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
-            
-            terminal.focus(true);
-            
-            // Keep terminal focused when clicking anywhere on page
-            $(document).on('click', function(e) {
-                // If not clicking on a link or button, focus terminal
-                if (!$(e.target).is('a, button, input, textarea, select')) {
-                    terminal.focus(true);
-                    setTimeout(nuclearCleanup, 1);
-                }
-            });
-            
-            // Auto-focus on any keypress
-            $(document).on('keydown', function(e) {
-                // If terminal is not focused, focus it
-                if (!terminal.is_focus()) {
-                    terminal.focus(true);
-                }
-            });
-            
-            // MOBILE-ONLY handling
-            if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                $(window).on('orientationchange', function() {
-                    setTimeout(() => {
-                        terminal.resize();
-                        terminal.focus(true);
-                        nuclearCleanup();
-                    }, 500);
-                });
-                
-                console.log('Mobile mode enabled - natural scroll behavior');
-            }
-            
-            terminal.settings().onAfterCommand = function() {
-                setTimeout(nuclearCleanup, 1);
-            };
-            
-            terminal.settings().onAfterEcho = function() {
-                setTimeout(nuclearCleanup, 1);
-            };
-            
-            terminal.settings().onBeforeCommand = function() {
-                nuclearCleanup();
-            };
+        }, {
+            greetings: introBanner.innerHTML,
+            prompt: '$ '
         });
-
-        $(document).keydown(function(e) {
-            // Show help on F1
-            if (e.keyCode === 112) { // F1 key
-                e.preventDefault();
-                const terminal = $('body').terminal();
-                if (terminal) {
-                    terminal.exec('help');
-                }
-            }
-        });
-
-        if ('performance' in window) {
-            window.addEventListener('load', function() {
-                const loadTime = performance.now();
-                console.log(`Page loaded in ${Math.round(loadTime)}ms`);
-            });
-        }
-    </script>
-
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Brian",
-        "jobTitle": "DevOps Engineer",
-        "worksFor": {
-            "@type": "Organization",
-            "name": "DevOps Professional"
-        },
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Melbourne",
-            "addressRegion": "Victoria",
-            "addressCountry": "Australia"
-        },
-        "email": "brianf.iwnl@gmail.com",
-        "url": "https://au.linkedin.com/in/fungiwnl",
-        "sameAs": [
-            "https://github.com/fungiwnl",
-            "https://au.linkedin.com/in/fungiwnl"
-        ]
-    }
     </script>
 </body>
 </html>
