@@ -14,6 +14,7 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://wttr.in">
     
+    <!-- Updated mobile-optimized CSS -->
     <link rel="stylesheet" href="style.css">
     
     <!-- Scripts -->
@@ -30,7 +31,7 @@
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.2 
+    ╚═════╝  ╚═╝ term v1.1  
    
    
 Hi 👋 ! 
@@ -50,7 +51,7 @@ Type 'help' to see list of available commands
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.2 
+    ╚═════╝  ╚═╝ term v1.1  
    
    
 Hi 👋 ! 
@@ -107,10 +108,9 @@ https://au.linkedin.com/in/fungiwnl
 https://github.com/fungiwnl
     </script>
 
-    <!-- Terminal Configuration and Application Logic -->
     <script>
         const TERMINAL_CONFIG = {
-            version: 'v1.2',
+            version: 'v1.1',
             author: 'Brian',
             location: 'Melbourne, Australia',
             role: 'DevOps Engineer',
@@ -125,13 +125,13 @@ https://github.com/fungiwnl
                 name: 'Kmart Australia',
                 url: 'https://www.kmart.com.au',
                 type: 'Web',
-                description: 'E-commerce platform'
+                description: 'E-commerce platform testing'
             },
             {
                 name: 'Kmart New Zealand',
                 url: 'https://www.kmart.co.nz',
                 type: 'Web',
-                description: 'E-commerce platform'
+                description: 'E-commerce platform testing'
             },
             {
                 name: 'Release Me',
@@ -235,7 +235,6 @@ https://github.com/fungiwnl
                     .join('/');
                 return `${project.name} (${links})`;
             } else {
-                // Single URL
                 return `${project.name} ([[!;;;;${project.url}]${project.type}])`;
             }
         }
@@ -333,47 +332,132 @@ https://github.com/fungiwnl
                 },
                 onCommandNotFound: function(command) {
                     this.echo(`Command '${command}' not found. Type 'help' for available commands.`);
-                },
-                // Prevent multiple command lines
-                clickTimeout: 0, // Disable click-to-create-new-line
-                execHash: false, // Disable hash-based execution
-                historyState: false // Disable history state changes
+                }
             };
 
             const terminal = $('body').terminal(terminalCommands, terminalOptions);
             
-            // Prevent clicking from creating new command lines
-            terminal.off('click.terminal');
+            setTimeout(() => {
+                // Override the click handler at the jQuery Terminal level
+                if (terminal.click) {
+                    terminal.click = function() {
+                        // Just focus, don't create new command lines
+                        terminal.focus(true);
+                        return terminal;
+                    };
+                }
+                
+                // Override any internal command line creation
+                if (terminal.cmd) {
+                    const originalCmd = terminal.cmd;
+                    terminal.cmd = function() {
+                        // Only allow if there's no existing command line
+                        const existingCmds = $('.cmd');
+                        if (existingCmds.length === 0) {
+                            return originalCmd.apply(this, arguments);
+                        }
+                        return terminal;
+                    };
+                }
+                
+                // Completely block the terminal's mouse event system
+                const $terminal = $('.terminal');
+                
+                // Remove ALL event handlers jQuery Terminal attached
+                $terminal.off();
+                
+                // Add our controlled handlers that allow focus but prevent duplicates
+                $terminal.on('click dblclick', function(e) {
+                    // Allow the click but focus terminal and prevent duplicates
+                    terminal.focus(true);
+                    
+                    // Clean up any duplicates that might have been created
+                    setTimeout(nuclearCleanup, 1);
+                });
+                
+            }, 100);
             
-            // Override the click behavior to just focus instead of creating new lines
-            $('.terminal').off('click.terminal').on('click.terminal', function(e) {
-                // Only focus the terminal, don't create new command lines
-                terminal.focus();
-                e.preventDefault();
-                e.stopPropagation();
-            });
-            
-            // Ensure only one command line exists at all times
-            function ensureSingleCommandLine() {
+            function nuclearCleanup() {
                 const cmds = $('.cmd');
+                const clipboards = $('.cmd-clipboard');
+                const prompts = $('.cmd-prompt');
+                
                 if (cmds.length > 1) {
-                    // Remove all but the last command line
-                    cmds.slice(0, -1).remove();
+                    console.log(`NUCLEAR: Removing ${cmds.length - 1} duplicate command lines`);
+                    cmds.slice(0, -1).each(function() {
+                        $(this).remove();
+                    });
+                }
+                
+                if (clipboards.length > 1) {
+                    clipboards.slice(0, -1).each(function() {
+                        $(this).remove();
+                    });
+                }
+                
+                if (prompts.length > 1) {
+                    prompts.slice(0, -1).each(function() {
+                        $(this).remove();
+                    });
                 }
             }
             
-            // Run cleanup periodically and after any DOM changes
-            setInterval(ensureSingleCommandLine, 1000);
+            // Run cleanup less aggressively now that we allow clicking
+            setInterval(nuclearCleanup, 100); // Every 100ms instead of 50ms
             
-            // MOBILE-ONLY handling (NO auto-scroll - let it behave naturally)
-            if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // Also run on any DOM change
+            const nuclearObserver = new MutationObserver(function(mutations) {
+                let needsCleanup = false;
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        for (let node of mutation.addedNodes) {
+                            if (node.nodeType === Node.ELEMENT_NODE) {
+                                if (node.classList.contains('cmd') || 
+                                    node.querySelector && node.querySelector('.cmd')) {
+                                    needsCleanup = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
                 
-                // Only handle orientation changes for layout adjustments
+                if (needsCleanup) {
+                    setTimeout(nuclearCleanup, 10);
+                }
+            });
+            
+            nuclearObserver.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+            
+            terminal.focus(true);
+            
+            // Keep terminal focused when clicking anywhere on page
+            $(document).on('click', function(e) {
+                // If not clicking on a link or button, focus terminal
+                if (!$(e.target).is('a, button, input, textarea, select')) {
+                    terminal.focus(true);
+                    setTimeout(nuclearCleanup, 1);
+                }
+            });
+            
+            // Auto-focus on any keypress
+            $(document).on('keydown', function(e) {
+                // If terminal is not focused, focus it
+                if (!terminal.is_focus()) {
+                    terminal.focus(true);
+                }
+            });
+            
+            // MOBILE-ONLY handling
+            if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 $(window).on('orientationchange', function() {
                     setTimeout(() => {
-                        // Just ensure terminal is properly sized, no forced scrolling
                         terminal.resize();
-                        ensureSingleCommandLine();
+                        terminal.focus(true);
+                        nuclearCleanup();
                     }, 500);
                 });
                 
@@ -381,15 +465,18 @@ https://github.com/fungiwnl
             }
             
             terminal.settings().onAfterCommand = function() {
-                setTimeout(ensureSingleCommandLine, 100);
+                setTimeout(nuclearCleanup, 1);
             };
             
             terminal.settings().onAfterEcho = function() {
-                setTimeout(ensureSingleCommandLine, 50);
+                setTimeout(nuclearCleanup, 1);
+            };
+            
+            terminal.settings().onBeforeCommand = function() {
+                nuclearCleanup();
             };
         });
 
-        // Add keyboard shortcut hints
         $(document).keydown(function(e) {
             // Show help on F1
             if (e.keyCode === 112) { // F1 key
@@ -409,7 +496,6 @@ https://github.com/fungiwnl
         }
     </script>
 
-    <!-- Structured data for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
