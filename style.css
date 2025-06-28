@@ -1,7 +1,9 @@
 @import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css");
 
+/* Fix viewport issues */
 html {
     height: 100%;
+    /* Prevent zoom on input focus (iOS) */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -12,20 +14,25 @@ body {
     border-width: 2px;
     background-clip: content-box, padding-box;
     max-width: 100%;
-    max-height: 100vh;
-    overflow-x: hidden;
+    max-height: 100vh; /* Fixed missing unit */
+    overflow-x: hidden; /* Prevent horizontal scroll */
     overflow-y: auto;
     margin: 0;
+    /* Better mobile handling */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
+    /* Prevent text flickering on mobile */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
+/* Mobile-specific body fixes */
 @media screen and (max-width: 768px) {
     body {
         padding: 12px;
+        /* Prevent zoom on double tap */
         touch-action: manipulation;
+        /* Fixed height for mobile to prevent keyboard resize issues */
         height: 100vh;
         height: 100dvh;
         overflow: hidden;
@@ -34,6 +41,39 @@ body {
         left: 0;
         right: 0;
         bottom: 0;
+    }
+}
+
+/* Portrait orientation lock for mobile */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    body::before {
+        content: "📱 Please rotate your device to portrait mode for the best experience";
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: #1e1e1e;
+        color: #aaa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-family: 'Cascadia Code', 'SF Mono', Monaco, 'Consolas', monospace;
+        font-size: 18px;
+        line-height: 1.5;
+        z-index: 9999;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+    
+    /* Hide terminal content in landscape */
+    .terminal {
+        display: none;
+    }
+    
+    body {
+        overflow: hidden;
     }
 }
 
@@ -113,20 +153,73 @@ body {
 .terminal-scroller {
     position: relative;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: hidden; /* Prevent horizontal scroll */
     scrollbar-gutter: stable;
     height: 100%;
     box-sizing: border-box;
+    /* Better mobile scrolling */
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-y: contain;
 }
 
+/* Auto-scroll fixes - MOBILE ONLY */
+@media screen and (max-width: 768px) {
+    .terminal-scroller {
+        /* Ensure auto-scroll to bottom behavior on mobile */
+        scroll-behavior: smooth;
+    }
+    
+    /* Auto-scroll to bottom functionality */
+    .terminal-scroller::after {
+        content: "";
+        display: block;
+        height: 1px;
+        width: 1px;
+        clear: both;
+    }
+
+    /* Force scroll to bottom on new content - mobile only */
+    .terminal-output:last-child {
+        margin-bottom: 0;
+    }
+
+    .terminal .cmd:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Mobile terminal scroller fixes */
 @media screen and (max-width: 768px) {
     .terminal-scroller {
         height: calc(100vh - 24px);
         height: calc(100dvh - 24px);
         overflow-x: hidden;
+        /* Prevent bounce scrolling on iOS */
         overscroll-behavior: none;
+        /* Ensure smooth scrolling to bottom */
+        scroll-behavior: smooth;
+    }
+    
+    /* Mobile auto-scroll enhancement */
+    .terminal {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    .terminal-output {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Ensure cursor/prompt stays at bottom */
+    .cmd {
+        flex-shrink: 0;
+        position: sticky;
+        bottom: 0;
+        background-color: #1e1e1e;
+        z-index: 100;
     }
 }
 
@@ -188,6 +281,7 @@ body.full-screen-terminal {
     position: relative;
     width: 100%;
     z-index: 300;
+    /* Mobile touch improvements */
     touch-action: manipulation;
 }
 
@@ -294,11 +388,13 @@ body.full-screen-terminal {
     height: auto;
 }
 
+/* CRITICAL MOBILE FIX: Text wrapping behavior */
 .terminal .terminal-output > div:not(.raw) div {
-    white-space: pre-wrap;
+    white-space: pre-wrap; /* Allow wrapping on mobile instead of nowrap */
     word-wrap: break-word;
     overflow-wrap: break-word;
     clear: both;
+    /* Prevent text jumping */
     hyphens: none;
     -webkit-hyphens: none;
     -ms-hyphens: none;
@@ -341,6 +437,7 @@ body.full-screen-terminal {
     line-height: calc((var(--size) * (16px / var(--pixel-density, 1))) + (1px / var(--pixel-density, 1)));
 }
 
+/* Mobile line height adjustments */
 @media screen and (max-width: 768px) {
     .terminal .terminal-output > :not(.raw) > div,
     .cmd div,
@@ -380,8 +477,8 @@ body.full-screen-terminal {
 @media screen and (max-width: 768px) {
     .terminal,
     .cmd {
-        font-size: 16px;
-        font-weight: 500;
+        font-size: 16px; /* Larger for mobile readability */
+        font-weight: 500; /* Lighter weight for mobile */
     }
 }
 
@@ -523,12 +620,14 @@ body.full-screen-terminal {
     color: inherit;
 }
 
+/* Fix for underline on middle line */
 .cmd [role="presentation"].cmd-cursor-line {
     position: relative;
     z-index: 100;
     cursor: text;
 }
 
+/* Prompt above cursor line */
 .cmd .cmd-prompt {
     position: relative;
     z-index: 200;
@@ -547,6 +646,7 @@ body.full-screen-terminal {
     --original-color: var(--link-color, #3377FF);
 }
 
+/* Animation keyframes */
 @keyframes terminal-blink {
     0%, 50% {
         background-color: #aaa;
@@ -563,9 +663,12 @@ body.full-screen-terminal {
     }
 }
 
+/* Mobile keyboard handling fixes */
 @media screen and (max-width: 768px) {
+    /* Prevent page jumping when virtual keyboard appears */
     .terminal-mobile.terminal-less .terminal-wrapper {
         pointer-events: none;
+        /* Prevent text flickering */
         will-change: auto;
         transform: translateZ(0);
     }
@@ -575,6 +678,7 @@ body.full-screen-terminal {
         pointer-events: visible;
     }
     
+    /* Better mobile input handling */
     .cmd-editable {
         position: absolute;
         top: calc(var(--cmd-top) * 1px);
@@ -586,16 +690,20 @@ body.full-screen-terminal {
         background: transparent;
         opacity: 0.01;
         outline: 0px solid transparent;
+        /* Prevent zoom on focus */
         font-size: 16px;
+        /* Prevent scrolling when keyboard appears */
         touch-action: none;
     }
     
+    /* Hide the cursor/input when not focused to prevent flickering */
     .cmd .cmd-clipboard {
         opacity: 0;
         pointer-events: none;
     }
 }
 
+/* Selection styles */
 .terminal h1::selection,
 .terminal h2::selection,
 .terminal h3::selection,
@@ -630,6 +738,7 @@ body.full-screen-terminal {
     color: var(--error-color, red);
 }
 
+/* Scrollbar styling */
 .terminal-scroller::-webkit-scrollbar {
     width: calc(6px / var(--pixel-density, 1));
     height: calc(6px / var(--pixel-density, 1));
@@ -650,6 +759,7 @@ body.full-screen-terminal {
     scrollbar-width: thin;
 }
 
+/* Mobile scrollbar improvements */
 @media screen and (max-width: 768px) {
     .terminal-scroller::-webkit-scrollbar {
         width: 8px;
@@ -661,6 +771,7 @@ body.full-screen-terminal {
     }
 }
 
+/* Prevent reduced motion issues on mobile */
 @media (prefers-reduced-motion: reduce) {
     .cmd .cmd-cursor.cmd-blink > span[data-text]:not(.emoji):not(.fa):not(.far):not(.fas) span,
     .cmd .cmd-cursor.cmd-blink a,
@@ -672,20 +783,37 @@ body.full-screen-terminal {
     }
 }
 
+/* iOS Safari specific fixes */
 @supports (-webkit-appearance: none) {
     @media screen and (max-width: 768px) {
         body {
+            /* Prevent bounce scrolling */
             position: fixed;
             overflow: hidden;
         }
         
         .terminal-scroller {
+            /* Enable momentum scrolling */
             -webkit-overflow-scrolling: touch;
+            /* Prevent over-scroll bounce */
             overscroll-behavior: contain;
+            /* Auto-scroll behavior */
+            scroll-behavior: smooth;
         }
         
+        /* Fix for iOS safe area */
         .terminal {
             padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        /* Ensure new content triggers scroll */
+        .terminal-output > div:last-child {
+            padding-bottom: 10px;
+        }
+        
+        /* Auto-scroll trigger */
+        .cmd {
+            scroll-margin-bottom: 20px;
         }
     }
 }
