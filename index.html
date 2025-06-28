@@ -14,7 +14,6 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://wttr.in">
     
-    <!-- Updated mobile-optimized CSS -->
     <link rel="stylesheet" href="style.css">
     
     <!-- Scripts -->
@@ -31,7 +30,7 @@
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.1  
+    ╚═════╝  ╚═╝ term v1.2 
    
    
 Hi 👋 ! 
@@ -51,7 +50,7 @@ Type 'help' to see list of available commands
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.1  
+    ╚═════╝  ╚═╝ term v1.2 
    
    
 Hi 👋 ! 
@@ -110,9 +109,8 @@ https://github.com/fungiwnl
 
     <!-- Terminal Configuration and Application Logic -->
     <script>
-        // Configuration object for better maintainability
         const TERMINAL_CONFIG = {
-            version: 'v1.1',
+            version: 'v1.2',
             author: 'Brian',
             location: 'Melbourne, Australia',
             role: 'DevOps Engineer',
@@ -122,19 +120,18 @@ https://github.com/fungiwnl
             cv: 'https://github.com/fungiwnl/cv/blob/main/cv.pdf'
         };
 
-        // Project data for better organization
         const PROJECTS = [
             {
                 name: 'Kmart Australia',
                 url: 'https://www.kmart.com.au',
                 type: 'Web',
-                description: 'E-commerce platform testing'
+                description: 'E-commerce platform'
             },
             {
                 name: 'Kmart New Zealand',
                 url: 'https://www.kmart.co.nz',
                 type: 'Web',
-                description: 'E-commerce platform testing'
+                description: 'E-commerce platform'
             },
             {
                 name: 'Release Me',
@@ -224,11 +221,9 @@ https://github.com/fungiwnl
         }
 
         function formatProjectLinks(project) {
-            // Check if project has ceased operations but still has a URL
             if (project.status === 'defunct' && project.url) {
                 return `${project.name} ([[!;;;;${project.url}]${project.type} - Defunct])`;
             }
-            // Check if project has ceased operations with no URL
             else if (project.status === 'defunct') {
                 return `${project.name} (${project.type} - Defunct)`;
             }
@@ -257,7 +252,6 @@ https://github.com/fungiwnl
             }
         }
 
-        // Terminal commands
         const terminalCommands = {
             help() {
                 this.echo('\n📋 Available commands:');
@@ -313,22 +307,18 @@ https://github.com/fungiwnl
                 return await fetchWeather();
             },
 
-            // Hidden easter egg command
             version() {
                 this.echo(`\n🔧 Terminal ${TERMINAL_CONFIG.version}`);
                 this.echo(`Built by ${TERMINAL_CONFIG.author}`);
                 this.echo('Powered by jQuery Terminal');
             },
 
-            // Clear command (alias for ctrl+l)
             clear() {
                 this.clear();
             }
         };
 
-        // Initialize terminal when DOM is ready
         $(document).ready(function() {
-            // Terminal options
             const terminalOptions = {
                 greetings: getTemplate('intro-banner'),
                 prompt: '$ ',
@@ -343,11 +333,37 @@ https://github.com/fungiwnl
                 },
                 onCommandNotFound: function(command) {
                     this.echo(`Command '${command}' not found. Type 'help' for available commands.`);
-                }
+                },
+                // Prevent multiple command lines
+                clickTimeout: 0, // Disable click-to-create-new-line
+                execHash: false, // Disable hash-based execution
+                historyState: false // Disable history state changes
             };
 
-            // Initialize the terminal
             const terminal = $('body').terminal(terminalCommands, terminalOptions);
+            
+            // Prevent clicking from creating new command lines
+            terminal.off('click.terminal');
+            
+            // Override the click behavior to just focus instead of creating new lines
+            $('.terminal').off('click.terminal').on('click.terminal', function(e) {
+                // Only focus the terminal, don't create new command lines
+                terminal.focus();
+                e.preventDefault();
+                e.stopPropagation();
+            });
+            
+            // Ensure only one command line exists at all times
+            function ensureSingleCommandLine() {
+                const cmds = $('.cmd');
+                if (cmds.length > 1) {
+                    // Remove all but the last command line
+                    cmds.slice(0, -1).remove();
+                }
+            }
+            
+            // Run cleanup periodically and after any DOM changes
+            setInterval(ensureSingleCommandLine, 1000);
             
             // MOBILE-ONLY handling (NO auto-scroll - let it behave naturally)
             if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -357,11 +373,20 @@ https://github.com/fungiwnl
                     setTimeout(() => {
                         // Just ensure terminal is properly sized, no forced scrolling
                         terminal.resize();
+                        ensureSingleCommandLine();
                     }, 500);
                 });
                 
                 console.log('Mobile mode enabled - natural scroll behavior');
             }
+            
+            terminal.settings().onAfterCommand = function() {
+                setTimeout(ensureSingleCommandLine, 100);
+            };
+            
+            terminal.settings().onAfterEcho = function() {
+                setTimeout(ensureSingleCommandLine, 50);
+            };
         });
 
         // Add keyboard shortcut hints
@@ -376,7 +401,6 @@ https://github.com/fungiwnl
             }
         });
 
-        // Performance monitoring (optional)
         if ('performance' in window) {
             window.addEventListener('load', function() {
                 const loadTime = performance.now();

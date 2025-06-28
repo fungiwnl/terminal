@@ -597,6 +597,30 @@ body.full-screen-terminal {
         opacity: 0;
         pointer-events: none;
     }
+    
+    /* Fix duplicate input issues on mobile */
+    .cmd textarea {
+        position: absolute !important;
+        left: -9999px !important;
+        top: -9999px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+    
+    /* Ensure only one input is active */
+    .terminal .cmd .cmd-clipboard:not(:first-of-type) {
+        display: none !important;
+    }
+    
+    /* Hide extra cursor elements that might appear */
+    .cmd .cmd-cursor-line:not(:last-child) {
+        display: none !important;
+    }
+    
+    /* Fix for multiple prompt lines */
+    .cmd .cmd-prompt:not(:first-child) {
+        display: none !important;
+    }
 }
 
 /* Selection styles */
