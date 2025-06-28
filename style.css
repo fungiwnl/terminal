@@ -3,7 +3,6 @@
 /* Fix viewport issues */
 html {
     height: 100%;
-    /* Prevent zoom on input focus (iOS) */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
@@ -14,33 +13,20 @@ body {
     border-width: 2px;
     background-clip: content-box, padding-box;
     max-width: 100%;
-    max-height: 100vh; /* Fixed missing unit */
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    max-height: 100vh;
+    overflow-x: hidden;
     overflow-y: auto;
     margin: 0;
-    /* Better mobile handling */
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-    /* Prevent text flickering on mobile */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Mobile-specific body fixes */
+/* Simplified mobile adjustments - NO scroll interference */
 @media screen and (max-width: 768px) {
     body {
         padding: 12px;
-        /* Prevent zoom on double tap */
         touch-action: manipulation;
-        /* Fixed height for mobile to prevent keyboard resize issues */
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        /* Removed fixed positioning and height constraints */
     }
 }
 
@@ -67,7 +53,6 @@ body {
         box-sizing: border-box;
     }
     
-    /* Hide terminal content in landscape */
     .terminal {
         display: none;
     }
@@ -146,80 +131,26 @@ body {
     --base-color: var(--color);
     contain: content;
     width: 100%;
-    height: 100%;
     box-sizing: border-box;
 }
 
 .terminal-scroller {
     position: relative;
     overflow-y: auto;
-    overflow-x: hidden; /* Prevent horizontal scroll */
+    overflow-x: hidden;
     scrollbar-gutter: stable;
     height: 100%;
     box-sizing: border-box;
-    /* Better mobile scrolling */
+    /* Simple mobile scrolling - no fancy stuff */
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
 }
 
-/* Auto-scroll fixes - MOBILE ONLY */
+/* Simplified mobile terminal adjustments */
 @media screen and (max-width: 768px) {
     .terminal-scroller {
-        /* Ensure auto-scroll to bottom behavior on mobile */
-        scroll-behavior: smooth;
-    }
-    
-    /* Auto-scroll to bottom functionality */
-    .terminal-scroller::after {
-        content: "";
-        display: block;
-        height: 1px;
-        width: 1px;
-        clear: both;
-    }
-
-    /* Force scroll to bottom on new content - mobile only */
-    .terminal-output:last-child {
-        margin-bottom: 0;
-    }
-
-    .terminal .cmd:last-child {
-        margin-bottom: 0;
-    }
-}
-
-/* Mobile terminal scroller fixes */
-@media screen and (max-width: 768px) {
-    .terminal-scroller {
-        height: calc(100vh - 24px);
-        height: calc(100dvh - 24px);
+        /* Let it scroll naturally */
         overflow-x: hidden;
-        /* Prevent bounce scrolling on iOS */
-        overscroll-behavior: none;
-        /* Ensure smooth scrolling to bottom */
-        scroll-behavior: smooth;
-    }
-    
-    /* Mobile auto-scroll enhancement */
-    .terminal {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-    
-    .terminal-output {
-        flex: 1;
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    /* Ensure cursor/prompt stays at bottom */
-    .cmd {
-        flex-shrink: 0;
-        position: sticky;
-        bottom: 0;
-        background-color: #1e1e1e;
-        z-index: 100;
     }
 }
 
@@ -281,7 +212,6 @@ body.full-screen-terminal {
     position: relative;
     width: 100%;
     z-index: 300;
-    /* Mobile touch improvements */
     touch-action: manipulation;
 }
 
@@ -388,13 +318,11 @@ body.full-screen-terminal {
     height: auto;
 }
 
-/* CRITICAL MOBILE FIX: Text wrapping behavior */
+/* FIXED: Text wrapping for mobile without breaking scroll */
 .terminal .terminal-output > div:not(.raw) div {
-    white-space: pre-wrap; /* Allow wrapping on mobile instead of nowrap */
     word-wrap: break-word;
     overflow-wrap: break-word;
     clear: both;
-    /* Prevent text jumping */
     hyphens: none;
     -webkit-hyphens: none;
     -ms-hyphens: none;
@@ -406,9 +334,6 @@ body.full-screen-terminal {
         white-space: pre-wrap;
         word-break: break-word;
         overflow-wrap: anywhere;
-        /* Prevent text flickering */
-        will-change: auto;
-        transform: translateZ(0); /* Force hardware acceleration */
     }
 }
 
@@ -477,8 +402,8 @@ body.full-screen-terminal {
 @media screen and (max-width: 768px) {
     .terminal,
     .cmd {
-        font-size: 16px; /* Larger for mobile readability */
-        font-weight: 500; /* Lighter weight for mobile */
+        font-size: 16px;
+        font-weight: 500;
     }
 }
 
@@ -620,14 +545,12 @@ body.full-screen-terminal {
     color: inherit;
 }
 
-/* Fix for underline on middle line */
 .cmd [role="presentation"].cmd-cursor-line {
     position: relative;
     z-index: 100;
     cursor: text;
 }
 
-/* Prompt above cursor line */
 .cmd .cmd-prompt {
     position: relative;
     z-index: 200;
@@ -663,40 +586,13 @@ body.full-screen-terminal {
     }
 }
 
-/* Mobile keyboard handling fixes */
+/* Mobile input handling - simplified */
 @media screen and (max-width: 768px) {
-    /* Prevent page jumping when virtual keyboard appears */
-    .terminal-mobile.terminal-less .terminal-wrapper {
-        pointer-events: none;
-        /* Prevent text flickering */
-        will-change: auto;
-        transform: translateZ(0);
-    }
-    
-    .terminal-mobile.terminal-less .terminal-output a, 
     .cmd-editable {
-        pointer-events: visible;
+        font-size: 16px; /* Prevent zoom on focus */
     }
     
-    /* Better mobile input handling */
-    .cmd-editable {
-        position: absolute;
-        top: calc(var(--cmd-top) * 1px);
-        bottom: 0;
-        right: 0;
-        left: 0;
-        z-index: 500;
-        color: transparent;
-        background: transparent;
-        opacity: 0.01;
-        outline: 0px solid transparent;
-        /* Prevent zoom on focus */
-        font-size: 16px;
-        /* Prevent scrolling when keyboard appears */
-        touch-action: none;
-    }
-    
-    /* Hide the cursor/input when not focused to prevent flickering */
+    /* Hide problematic elements that might cause scroll issues */
     .cmd .cmd-clipboard {
         opacity: 0;
         pointer-events: none;
@@ -738,10 +634,10 @@ body.full-screen-terminal {
     color: var(--error-color, red);
 }
 
-/* Scrollbar styling */
+/* Simple scrollbar styling */
 .terminal-scroller::-webkit-scrollbar {
-    width: calc(6px / var(--pixel-density, 1));
-    height: calc(6px / var(--pixel-density, 1));
+    width: 6px;
+    height: 6px;
     background: var(--background, #1e1e1e);
 }
 
@@ -780,40 +676,5 @@ body.full-screen-terminal {
     .cmd .cmd-cursor.cmd-blink .fas,
     .cmd .cmd-cursor .emoji {
         animation: none;
-    }
-}
-
-/* iOS Safari specific fixes */
-@supports (-webkit-appearance: none) {
-    @media screen and (max-width: 768px) {
-        body {
-            /* Prevent bounce scrolling */
-            position: fixed;
-            overflow: hidden;
-        }
-        
-        .terminal-scroller {
-            /* Enable momentum scrolling */
-            -webkit-overflow-scrolling: touch;
-            /* Prevent over-scroll bounce */
-            overscroll-behavior: contain;
-            /* Auto-scroll behavior */
-            scroll-behavior: smooth;
-        }
-        
-        /* Fix for iOS safe area */
-        .terminal {
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        
-        /* Ensure new content triggers scroll */
-        .terminal-output > div:last-child {
-            padding-bottom: 10px;
-        }
-        
-        /* Auto-scroll trigger */
-        .cmd {
-            scroll-margin-bottom: 20px;
-        }
     }
 }

@@ -14,8 +14,10 @@
     <link rel="preconnect" href="https://unpkg.com">
     <link rel="preconnect" href="https://wttr.in">
     
+    <!-- Updated mobile-optimized CSS -->
     <link rel="stylesheet" href="style.css">
     
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
             integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
             crossorigin="anonymous"></script>
@@ -29,7 +31,7 @@
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.2  
+    ╚═════╝  ╚═╝ term v1.1  
    
    
 Hi 👋 ! 
@@ -56,7 +58,7 @@ Hi 👋 !
 
 I'm Brian. I'm a DevOps engineer based in Melbourne, Australia.
 
-With expertise in web, mobile, and embedded systems across diverse industries
+With expertise in web, mobile, and embedded testing across diverse industries
 including retail, healthcare, government, and entertainment.
     </script>
 
@@ -108,6 +110,7 @@ https://github.com/fungiwnl
 
     <!-- Terminal Configuration and Application Logic -->
     <script>
+        // Configuration object for better maintainability
         const TERMINAL_CONFIG = {
             version: 'v1.1',
             author: 'Brian',
@@ -119,6 +122,7 @@ https://github.com/fungiwnl
             cv: 'https://github.com/fungiwnl/cv/blob/main/cv.pdf'
         };
 
+        // Project data for better organization
         const PROJECTS = [
             {
                 name: 'Kmart Australia',
@@ -220,9 +224,11 @@ https://github.com/fungiwnl
         }
 
         function formatProjectLinks(project) {
+            // Check if project has ceased operations but still has a URL
             if (project.status === 'defunct' && project.url) {
                 return `${project.name} ([[!;;;;${project.url}]${project.type} - Defunct])`;
             }
+            // Check if project has ceased operations with no URL
             else if (project.status === 'defunct') {
                 return `${project.name} (${project.type} - Defunct)`;
             }
@@ -234,6 +240,7 @@ https://github.com/fungiwnl
                     .join('/');
                 return `${project.name} (${links})`;
             } else {
+                // Single URL
                 return `${project.name} ([[!;;;;${project.url}]${project.type}])`;
             }
         }
@@ -339,12 +346,28 @@ https://github.com/fungiwnl
                 }
             };
 
-            $('body').terminal(terminalCommands, terminalOptions);
+            // Initialize the terminal
+            const terminal = $('body').terminal(terminalCommands, terminalOptions);
+            
+            // MOBILE-ONLY handling (NO auto-scroll - let it behave naturally)
+            if (window.innerWidth <= 768 || /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                
+                // Only handle orientation changes for layout adjustments
+                $(window).on('orientationchange', function() {
+                    setTimeout(() => {
+                        // Just ensure terminal is properly sized, no forced scrolling
+                        terminal.resize();
+                    }, 500);
+                });
+                
+                console.log('Mobile mode enabled - natural scroll behavior');
+            }
         });
 
         // Add keyboard shortcut hints
         $(document).keydown(function(e) {
-            if (e.keyCode === 112) {
+            // Show help on F1
+            if (e.keyCode === 112) { // F1 key
                 e.preventDefault();
                 const terminal = $('body').terminal();
                 if (terminal) {
@@ -353,6 +376,7 @@ https://github.com/fungiwnl
             }
         });
 
+        // Performance monitoring (optional)
         if ('performance' in window) {
             window.addEventListener('load', function() {
                 const loadTime = performance.now();
@@ -361,6 +385,7 @@ https://github.com/fungiwnl
         }
     </script>
 
+    <!-- Structured data for SEO -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -369,7 +394,7 @@ https://github.com/fungiwnl
         "jobTitle": "DevOps Engineer",
         "worksFor": {
             "@type": "Organization",
-            "name": "DevOps Engineer"
+            "name": "DevOps Professional"
         },
         "address": {
             "@type": "PostalAddress",
