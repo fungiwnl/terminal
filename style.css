@@ -1,5 +1,9 @@
 @import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css");
 
+.terminal {
+    --size: 1.4;
+}
+
 /* Portrait Mode Lock for Mobile Devices */
 @media screen and (orientation: landscape) and (max-height: 600px) and (hover: none) {
     body::before {
@@ -88,7 +92,7 @@ body {
     }
     
     .terminal {
-        --size: 0.95; /* Slightly smaller but not too much */
+        --size: 1.05;
         --padding: 6;
     }
     
@@ -100,7 +104,7 @@ body {
 /* Very small screens */
 @media screen and (max-width: 320px) {
     .terminal {
-        --size: 0.9; /* More moderate scaling */
+        --size: 0.9;
         --padding: 4;
     }
     
@@ -112,7 +116,7 @@ body {
 /* Tablet landscape mode */
 @media screen and (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
     .terminal {
-        --size: 1.1;
+        --size: 1.45;
     }
 }
 
