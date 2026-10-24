@@ -38,7 +38,10 @@ test('weather shows the current conditions', async ({ page }) => {
   }));
   await run(page, 'weather');
   const output = page.locator('.terminal-output');
-  await expect(output).toContainText('Melbourne, Victoria, Australia: Sunny, 21°C (feels like 20°C), 0.0mm');
+  await expect(output).toContainText('Melbourne, Victoria, Australia');
+  await expect(output).toContainText('Sunny');
+  await expect(output).toContainText('21°C, feels like 20°C');
+  await expect(output).toContainText('0.0mm rain');
   await expect(output).not.toContainText('Fetching weather');
   await expect(output).not.toContainText('<!DOCTYPE');
 });
@@ -64,4 +67,26 @@ test('prompt stays inside the pane after clearing', async ({ page }) => {
   const paneTop = await page.locator('.pane').evaluate(el => el.getBoundingClientRect().top);
   const promptTop = await page.locator('.cmd').evaluate(el => el.getBoundingClientRect().top);
   expect(promptTop).toBeGreaterThan(paneTop);
+});
+
+test.describe('weather on a small phone', () => {
+  test.use({ viewport: { width: 320, height: 640 } });
+
+  test('wraps a long place name between words', async ({ page }) => {
+    const place = ['Llanfairpwllgwyngyll', 'Isle of Anglesey', 'United Kingdom of Great Britain'];
+    await page.route('https://wttr.in/**', route => route.fulfill({
+      json: {
+        current_condition: [{ weatherDesc: [{ value: 'Patchy light rain with thunder' }], temp_C: '9', FeelsLikeC: '6', precipMM: '1.2' }],
+        nearest_area: [{ areaName: [{ value: place[0] }], region: [{ value: place[1] }], country: [{ value: place[2] }] }],
+      },
+    }));
+    await run(page, 'weather');
+    await expect(page.locator('.terminal-output')).toContainText('rain');
+
+    const lines = await page.locator('.terminal-output div[data-index]').last().locator(':scope > div').allInnerTexts();
+    const words = place.join(' ').split(' ').concat('Patchy light rain with thunder'.split(' '));
+    for (const word of words) {
+      expect(lines.some(line => line.includes(word)), `"${word}" split across lines`).toBe(true);
+    }
+  });
 });

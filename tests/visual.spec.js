@@ -20,6 +20,20 @@ for (const [name, viewport] of Object.entries(viewports)) {
       await expect(page).toHaveScreenshot(`${name}-intro.png`, { animations: 'disabled', caret: 'hide' });
     });
 
+    test('weather', async ({ page }) => {
+      await page.route('https://wttr.in/**', route => route.fulfill({
+        json: {
+          current_condition: [{ weatherDesc: [{ value: 'Light drizzle' }], temp_C: '18', FeelsLikeC: '18', precipMM: '0.4' }],
+          nearest_area: [{ areaName: [{ value: 'Melbourne' }], region: [{ value: 'Victoria' }], country: [{ value: 'Australia' }] }],
+        },
+      }));
+      await page.keyboard.press('Control+l');
+      await page.keyboard.type('weather');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.terminal-output')).toContainText('rain');
+      await expect(page).toHaveScreenshot(`${name}-weather.png`, { animations: 'disabled', caret: 'hide' });
+    });
+
     test('projects', async ({ page }) => {
       await page.keyboard.type('projects');
       await page.keyboard.press('Enter');

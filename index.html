@@ -194,7 +194,7 @@ https://github.com/fungiwnl
                 }, 80);
                 const done = text => {
                     clearInterval(spinner);
-                    term.update(-1, text);
+                    term.update(-1, text, { keepWords: true });
                 };
                 // wttr.in serves its HTML page to browser user agents unless the format is JSON
                 return fetch("https://wttr.in/?format=j1")
@@ -206,7 +206,13 @@ https://github.com/fungiwnl
                         const now = data.current_condition[0];
                         const area = data.nearest_area[0];
                         const place = [area.areaName, area.region, area.country].map(f => f[0].value).join(', ');
-                        done(`🌤️  ${place}: ${now.weatherDesc[0].value}, ${now.temp_C}°C (feels like ${now.FeelsLikeC}°C), ${now.precipMM}mm`);
+                        done([
+                            `🌤️  ${place}`,
+                            '',
+                            `  ${now.weatherDesc[0].value}`,
+                            `  ${now.temp_C}°C, feels like ${now.FeelsLikeC}°C`,
+                            `  ${now.precipMM}mm rain`
+                        ].join('\n'));
                     })
                     .catch(() => done('Weather is unavailable right now. Try again later.'));
             },
