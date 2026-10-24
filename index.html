@@ -164,8 +164,31 @@ https://github.com/fungiwnl
                 this.echo(linkedin.innerHTML);
             },
             weather: function() {
-                this.echo('\n🌤️  Fetching weather information...\n');
-                return fetch("https://wttr.in/?format=%l:+%m+%c+%C+%t+%f+%p").then(res => res.text());
+                const term = this;
+                const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+                let i = 0;
+                term.echo(`${frames[0]} Fetching weather...`);
+                const spinner = setInterval(() => {
+                    i = (i + 1) % frames.length;
+                    term.update(-1, `${frames[i]} Fetching weather...`);
+                }, 80);
+                const done = text => {
+                    clearInterval(spinner);
+                    term.update(-1, text);
+                };
+                // wttr.in serves its HTML page to browser user agents unless the format is JSON
+                return fetch("https://wttr.in/?format=j1")
+                    .then(res => {
+                        if (!res.ok) throw new Error(res.status);
+                        return res.json();
+                    })
+                    .then(data => {
+                        const now = data.current_condition[0];
+                        const area = data.nearest_area[0];
+                        const place = [area.areaName, area.region, area.country].map(f => f[0].value).join(', ');
+                        done(`🌤️  ${place}: ${now.weatherDesc[0].value}, ${now.temp_C}°C (feels like ${now.FeelsLikeC}°C), ${now.precipMM}mm`);
+                    })
+                    .catch(() => done('Weather is unavailable right now. Try again later.'));
             },
             clear: function() {
                 this.clear();
