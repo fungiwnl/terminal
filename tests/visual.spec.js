@@ -28,3 +28,13 @@ for (const [name, viewport] of Object.entries(viewports)) {
     });
   });
 }
+
+test.describe('phone landscape', () => {
+  test.use({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true });
+
+  test('rotate message', async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('.terminal-output')).toContainText("Type 'help'");
+    await expect(page).toHaveScreenshot('phone-landscape-rotate.png', { animations: 'disabled', caret: 'hide' });
+  });
+});
