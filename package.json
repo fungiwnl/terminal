@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "git config core.hooksPath .githooks",
+    "test:update": "playwright test tests/visual.spec.js --update-snapshots"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1"
