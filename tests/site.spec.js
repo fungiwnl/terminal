@@ -54,3 +54,14 @@ test('clear empties the output', async ({ page }) => {
   await run(page, 'clear');
   await expect(page.locator('.terminal-output')).not.toContainText('Available commands');
 });
+
+test('prompt stays inside the pane after clearing', async ({ page }) => {
+  for (const command of ['projects', 'help', 'email']) {
+    await run(page, command);
+  }
+  await page.keyboard.press('Control+l');
+  await expect.poll(() => page.evaluate(() => document.scrollingElement.scrollTop)).toBe(0);
+  const paneTop = await page.locator('.pane').evaluate(el => el.getBoundingClientRect().top);
+  const promptTop = await page.locator('.cmd').evaluate(el => el.getBoundingClientRect().top);
+  expect(promptTop).toBeGreaterThan(paneTop);
+});
