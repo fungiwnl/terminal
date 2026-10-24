@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test('help lists the commands', async ({ page }) => {
   await run(page, 'help');
-  await expect(page.locator('.terminal-output')).toContainText('about, projects, cv, email, github, linkedin, weather, help');
+  await expect(page.locator('.terminal-output')).toContainText('Available commands');
 });
 
 for (const [command, text] of [

@@ -1,7 +1,7 @@
 @import url("https://cdn.jsdelivr.net/npm/@xz/fonts@1/serve/cascadia-code.min.css");
 
 .terminal {
-    --size: 1.4;
+    --size: 1.25;
 }
 
 /* Portrait Mode Lock for Mobile Devices */
@@ -35,8 +35,8 @@
 
 /* Mobile-First Responsive Design */
 body {
-    background-color: #1e1e1e;
-    padding: 16px;
+    background-color: #1e1e2e;
+    padding: 20px;
     border-width: 2px;
     background-clip: content-box, padding-box;
     max-width: 100%;
@@ -52,7 +52,7 @@ body {
 /* Mobile viewport fixes */
 @media screen and (max-width: 768px) {
     body {
-        padding: 8px;
+        padding: 14px;
         min-height: 100vh;
         min-height: 100dvh; /* Dynamic viewport height */
     }
@@ -116,7 +116,7 @@ body {
 /* Tablet landscape mode */
 @media screen and (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
     .terminal {
-        --size: 1.45;
+        --size: 1.3;
     }
 }
 
@@ -1005,18 +1005,18 @@ terminal .terminal-output > div {
 /* Safe Area Handling for iOS devices with notches */
 @supports (padding: max(0px)) {
     body {
-        padding-left: max(16px, env(safe-area-inset-left));
-        padding-right: max(16px, env(safe-area-inset-right));
-        padding-top: max(16px, env(safe-area-inset-top));
-        padding-bottom: max(16px, env(safe-area-inset-bottom));
+        padding-left: max(20px, env(safe-area-inset-left));
+        padding-right: max(20px, env(safe-area-inset-right));
+        padding-top: max(20px, env(safe-area-inset-top));
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
     }
     
     @media screen and (max-width: 768px) {
         body {
-            padding-left: max(8px, env(safe-area-inset-left));
-            padding-right: max(8px, env(safe-area-inset-right));
-            padding-top: max(8px, env(safe-area-inset-top));
-            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            padding-left: max(14px, env(safe-area-inset-left));
+            padding-right: max(14px, env(safe-area-inset-right));
+            padding-top: max(14px, env(safe-area-inset-top));
+            padding-bottom: max(14px, env(safe-area-inset-bottom));
         }
     }
 }
@@ -1641,22 +1641,55 @@ terminal .terminal-output > div {
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #1e1e1e;
-        --color: #aaa;
-        --link-color: #3377FF;
-        --error-color: #ff4444;
-    }
+/* Catppuccin Mocha, matching the Ghostty config in dotfiles_macos */
+:root {
+    --background: #1e1e2e;
+    --color: #cdd6f4;
+    --link-color: #89b4fa;
+    --error-color: #f38ba8;
 }
 
-/* Light Mode Support */
-@media (prefers-color-scheme: light) {
-    :root {
-        --background: #ffffff;
-        --color: #333333;
-        --link-color: #0066cc;
-        --error-color: #cc0000;
+::selection {
+    background-color: #585b70;
+    color: #cdd6f4;
+}
+
+/* tmux-style pane border, blue while the terminal has focus */
+.pane {
+    --inset: 10px;
+    position: fixed;
+    inset: var(--inset);
+    border: 1px solid #585b70;
+    pointer-events: none;
+    z-index: 10;
+}
+
+body:focus-within .pane {
+    border-color: #89b4fa;
+}
+
+.pane-title {
+    position: absolute;
+    top: -0.7em;
+    left: 12px;
+    padding: 0 6px;
+    background: var(--background);
+    color: #585b70;
+    font-family: 'Cascadia Code', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+body:focus-within .pane-title {
+    color: #89b4fa;
+}
+
+@media screen and (max-width: 768px) {
+    .pane {
+        --inset: 7px;
+    }
+
+    .pane-title {
+        font-size: 11px;
     }
 }

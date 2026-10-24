@@ -11,13 +11,15 @@
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
+    <div class="pane" aria-hidden="true"><span class="pane-title">0 term v1.3</span></div>
+
     <template id="introBanner">
     ██████╗  ███████╗
     ██╔══██╗ ██╔════╝
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.2  
+    ╚═════╝  ╚═╝ term v1.3  
    
    
 Hi 👋 ! 
@@ -27,7 +29,7 @@ based in Melbourne, Australia. 🇦🇺
 
 -- 
 
-Type 'help' to see list of available commands
+Type 'help' to see the available commands
 
 -- 
     </template>
@@ -38,7 +40,7 @@ Type 'help' to see list of available commands
     ██████╔╝ █████╗  
     ██╔══██╗ ██╔══╝  
     ██████╔╝ ██║     
-    ╚═════╝  ╚═╝ term v1.2  
+    ╚═════╝  ╚═╝ term v1.3  
    
    
 Hi 👋 ! 
@@ -46,13 +48,15 @@ Hi 👋 !
 I'm Brian. I'm a Platform / DevOps Engineer
 based in Melbourne, Australia. 🇦🇺
 
-With experience in web, mobile, embedded across diverse industries including retail, healthcare, government and entertainment.
+With experience in web, mobile and embedded
+across retail, healthcare, government and
+entertainment.
     </template>
 
     <template id="cv">
 📄 My CV/Resume:
 
-https://github.com/fungiwnl/cv/blob/main/cv.pdf
+[[!;;;;https://github.com/fungiwnl/cv/blob/main/cv.pdf]github.com/fungiwnl/cv]
 
     (\ 
     \'\ 
@@ -69,19 +73,19 @@ https://github.com/fungiwnl/cv/blob/main/cv.pdf
 
 brianf.iwnl@gmail.com
 
-        _
-        |E]
-      .-|=====-. 
-      | | MAIL |   
-      |________|___
-           ||
-           ||
-           ||   www                %%%
-    vwv    ||   )_(,;;;,        ,;,\_/ www
-    )_(    ||   \|/ \_/         )_(\|  (_)
-    \|   \ || /\\|/  |/         \| \|// | 
-    ___\|//jgs||//_\V/_\|//_______\\|//V/\\|/__
-    </template>
+    _
+    |E]
+  .-|=====-. 
+  | | MAIL |   
+  |________|___
+       ||
+       ||
+       ||   www                %%%
+vwv    ||   )_(,;;;,        ,;,\_/ www
+)_(    ||   \|/ \_/         )_(\|  (_)
+\|   \ || /\\|/  |/         \| \|// | 
+___\|//jgs||//_\V/_\|//_______\\|//V/\\|/__
+</template>
 
     <template id="linkedin">
 🔗 LinkedIn Profile:
@@ -99,7 +103,7 @@ https://github.com/fungiwnl
         const projects = [
             { name: 'Kmart Australia', url: 'https://www.kmart.com.au', type: 'Web/Mobile' },
             { name: 'Kmart New Zealand', url: 'https://www.kmart.co.nz', type: 'Web/Mobile' },
-            { name: 'Release Me', type: 'Web - ceased operations', defunct: true },
+            { name: 'Release Me', type: 'Web - ceased', defunct: true },
             { name: 'Scouts Terrain', url: 'https://terrain.scouts.com.au/', type: 'Web' },
             { 
                 name: 'Service Victoria', 
@@ -114,9 +118,9 @@ https://github.com/fungiwnl
                 android: 'https://play.google.com/store/apps/details?id=au.org.beyondblue.beyondnow&gl=US',
                 type: 'Mobile App'
             },
-            { name: 'CovidCare', type: 'Mobile App - ceased operations', defunct: true },
-            { name: 'Althea Concierge', url: 'https://althea.life/', type: 'Web - ceased operations', defunct: true },
-            { name: 'Oddbods Oddlife', type: 'iOS Game - ceased operations', defunct: true },
+            { name: 'CovidCare', type: 'Mobile App - ceased', defunct: true },
+            { name: 'Althea Concierge', url: 'https://althea.life/', type: 'Web - ceased', defunct: true },
+            { name: 'Oddbods Oddlife', type: 'iOS Game - ceased', defunct: true },
             { name: 'Sesame Street Yourself', url: 'https://apps.apple.com/au/app/sesame-street-yourself/id1475571420', type: 'iOS Game' },
             { name: 'The Wiggles FTWF', url: 'https://apps.apple.com/au/app/the-wiggles-fun-time-faces/id1385364625', type: 'iOS App' },
             { name: 'Superwhy', url: 'https://pbskids.org/superwhy/', type: 'Web Game' },
@@ -136,18 +140,30 @@ https://github.com/fungiwnl
 
         $('body').terminal({
             help: function() {
-                this.echo('\n📋 Available commands:');
-                this.echo('  about, projects, cv, email, github, linkedin, weather, help');
-                this.echo('\n⌨️  Shortcuts:');
-                this.echo('  [ctrl+l] to clear the terminal');
-                this.echo('  [ctrl+c] to cancel the command');
+                this.echo(`
+📋 Available commands:
+
+  about      Who I am
+  projects   Things I've worked on
+  cv         My CV/resume
+  email      Get in touch
+  github     My GitHub profile
+  linkedin   My LinkedIn profile
+  weather    Weather where you are
+  clear      Clear the terminal
+
+⌨️  Shortcuts:
+
+  ctrl+l     Clear the terminal
+  ctrl+c     Cancel the command
+`);
             },
             about: function() {
                 this.echo(aboutBanner.innerHTML);
             },
             projects: function() {
                 this.echo('\n💼 Project Portfolio:\n');
-                this.echo('Here are some notable projects I\'ve worked on:\n');
+                this.echo('Notable projects I\'ve worked on:\n');
                 
                 projects.forEach(project => {
                     this.echo(`• ${formatProject(project)}`);
@@ -197,7 +213,7 @@ https://github.com/fungiwnl
             }
         }, {
             greetings: introBanner.innerHTML,
-            prompt: '$ '
+            prompt: '[[;#a6e3a1;]$] '
         });
     </script>
 </body>
