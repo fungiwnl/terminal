@@ -52,6 +52,25 @@ test('weather handles a failed request', async ({ page }) => {
   await expect(page.locator('.terminal-output')).toContainText('Weather is unavailable right now');
 });
 
+test('unknown commands follow the zsh message', async ({ page }) => {
+  await run(page, 'fdsfdf');
+  await expect(page.locator('.terminal-output')).toContainText('zsh: command not found: fdsfdf');
+});
+
+test('unknown command message names only the command, as typed', async ({ page }) => {
+  await run(page, 'foo bar baz');
+  await run(page, '[[;red;]x]');
+  const output = page.locator('.terminal-output');
+  await expect(output).toContainText('zsh: command not found: foo');
+  await expect(output).not.toContainText('zsh: command not found: foo bar');
+  await expect(output).toContainText('zsh: command not found: [[;red;]x]');
+});
+
+test('blank input prints nothing', async ({ page }) => {
+  await run(page, '   ');
+  await expect(page.locator('.terminal-output')).not.toContainText('command not found');
+});
+
 test('clear empties the output', async ({ page }) => {
   await run(page, 'help');
   await run(page, 'clear');
