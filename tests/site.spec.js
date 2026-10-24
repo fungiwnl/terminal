@@ -16,7 +16,7 @@ test('help lists the commands', async ({ page }) => {
 });
 
 for (const [command, text] of [
-  ['about', 'DevOps engineer based in Melbourne'],
+  ['about', 'Platform / DevOps Engineer'],
   ['projects', 'Kmart Australia'],
   ['cv', 'github.com/fungiwnl/cv'],
   ['email', 'brianf.iwnl@gmail.com'],
