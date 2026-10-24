@@ -54,7 +54,8 @@ test('weather handles a failed request', async ({ page }) => {
 
 test('unknown commands follow the zsh message', async ({ page }) => {
   await run(page, 'fdsfdf');
-  await expect(page.locator('.terminal-output')).toContainText('zsh: command not found: fdsfdf');
+  const message = page.locator('.terminal-output span', { hasText: 'zsh: command not found: fdsfdf' }).last();
+  await expect(message).toHaveCSS('color', 'rgb(243, 139, 168)');
 });
 
 test('unknown command message names only the command, as typed', async ({ page }) => {

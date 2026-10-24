@@ -224,7 +224,7 @@ https://github.com/fungiwnl
             onCommandNotFound: function(command, term) {
                 const name = $.terminal.parse_command(command).name;
                 if (!name) return;
-                term.echo(`zsh: command not found: ${$.terminal.escape_brackets(name)}`);
+                term.error(`zsh: command not found: ${name}`);
             },
             prompt: '[[;#a6e3a1;]$] '
         });
