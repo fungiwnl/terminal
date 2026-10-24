@@ -152,6 +152,8 @@ https://github.com/fungiwnl
   github     My GitHub profile
   linkedin   My LinkedIn profile
   weather    Weather where you are
+  date       Current date and time
+  cal        This month's calendar
   clear      Clear the terminal
 
 ⌨️  Shortcuts:
@@ -215,6 +217,32 @@ https://github.com/fungiwnl
                         ].join('\n'));
                     })
                     .catch(() => done('Weather is unavailable right now. Try again later.'));
+            },
+            date: function() {
+                const parts = Object.fromEntries(new Intl.DateTimeFormat('en-AU', {
+                    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    hourCycle: 'h23', timeZoneName: 'short'
+                }).formatToParts(new Date()).map(p => [p.type, p.value]));
+                const day = parts.day.padStart(2);
+                this.echo(`${parts.weekday} ${day} ${parts.month} ${parts.year} ${parts.hour}:${parts.minute}:${parts.second} ${parts.timeZoneName}`);
+            },
+            cal: function() {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = today.getMonth();
+                const title = `${today.toLocaleString('en-AU', { month: 'long' })} ${year}`;
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const cells = Array(new Date(year, month, 1).getDay()).fill('  ');
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const cell = String(d).padStart(2);
+                    cells.push(d === today.getDate() ? `[[;#1e1e2e;#cdd6f4]${cell}]` : cell);
+                }
+                const lines = [' '.repeat(Math.floor((20 - title.length) / 2)) + title, 'Su Mo Tu We Th Fr Sa'];
+                for (let i = 0; i < cells.length; i += 7) {
+                    lines.push(cells.slice(i, i + 7).join(' '));
+                }
+                this.echo(lines.join('\n'), { finalize: div => div.addClass('cal') });
             },
             clear: function() {
                 this.clear();

@@ -110,3 +110,57 @@ test.describe('weather on a small phone', () => {
     }
   });
 });
+
+test.describe('date and cal', () => {
+  test.use({ timezoneId: 'Australia/Melbourne', locale: 'en-AU' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(new Date('2026-10-24T20:20:12+11:00'));
+    await page.reload();
+    await expect(page.locator('.terminal-output')).toContainText("Type 'help'");
+  });
+
+  test('date prints like zsh', async ({ page }) => {
+    await run(page, 'date');
+    await expect(page.locator('.terminal-output')).toContainText('Sat 24 Oct 2026 20:20:12 AEDT');
+  });
+
+  for (const width of [1280, 320]) {
+    test(`cal lines up as a grid at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 640 });
+      await run(page, 'cal');
+      const cal = page.locator('.terminal-output .cal');
+      const rows = await cal.locator(':scope > div').allInnerTexts();
+      expect(rows.map(r => r.replace(/ /g, ' ').trimEnd())).toEqual([
+        '    October 2026',
+        'Su Mo Tu We Th Fr Sa',
+        '             1  2  3',
+        ' 4  5  6  7  8  9 10',
+        '11 12 13 14 15 16 17',
+        '18 19 20 21 22 23 24',
+        '25 26 27 28 29 30 31',
+      ]);
+      const today = cal.locator('span[data-text="24"]');
+      await expect(today).toHaveCSS('background-color', 'rgb(205, 214, 244)');
+
+      // 24 sits directly under Sa
+      const saLeft = await cal.locator(':scope > div').nth(1).evaluate(row => {
+        const text = [...row.querySelectorAll('*')].map(el => el.firstChild)
+          .find(node => node?.nodeType === Node.TEXT_NODE && node.data.includes('Sa'));
+        const range = document.createRange();
+        range.setStart(text, text.data.indexOf('Sa'));
+        range.setEnd(text, text.data.indexOf('Sa') + 2);
+        return range.getBoundingClientRect().left;
+      });
+      const todayLeft = (await today.boundingBox()).x;
+      expect(Math.abs(todayLeft - saLeft)).toBeLessThan(1);
+    });
+  }
+
+  test('help lists date and cal', async ({ page }) => {
+    await run(page, 'help');
+    const output = page.locator('.terminal-output');
+    await expect(output).toContainText('Current date and time');
+    await expect(output).toContainText("This month's calendar");
+  });
+});

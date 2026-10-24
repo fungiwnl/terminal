@@ -393,6 +393,10 @@ body.full-screen-terminal {
     }
 }
 
+.terminal .terminal-output > div.cal div {
+    white-space: pre;
+}
+
 .cmd .cmd-prompt > span, .cmd .cmd-prompt > a, .cmd .cmd-prompt:empty {
     float: left;
 }

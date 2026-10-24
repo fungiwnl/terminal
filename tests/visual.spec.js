@@ -9,7 +9,7 @@ const viewports = {
 
 for (const [name, viewport] of Object.entries(viewports)) {
   test.describe(name, () => {
-    test.use({ viewport });
+    test.use({ viewport, timezoneId: 'Australia/Melbourne', locale: 'en-AU' });
 
     test.beforeEach(async ({ page }) => {
       await page.goto('/');
@@ -32,6 +32,19 @@ for (const [name, viewport] of Object.entries(viewports)) {
       await page.keyboard.press('Enter');
       await expect(page.locator('.terminal-output')).toContainText('rain');
       await expect(page).toHaveScreenshot(`${name}-weather.png`, { animations: 'disabled', caret: 'hide' });
+    });
+
+    test('date and cal', async ({ page }) => {
+      await page.clock.setFixedTime(new Date('2026-10-24T20:20:12+11:00'));
+      await page.reload();
+      await expect(page.locator('.terminal-output')).toContainText("Type 'help'");
+      await page.keyboard.press('Control+l');
+      await page.keyboard.type('date');
+      await page.keyboard.press('Enter');
+      await page.keyboard.type('cal');
+      await page.keyboard.press('Enter');
+      await expect(page.locator('.terminal-output .cal')).toContainText('October 2026');
+      await expect(page).toHaveScreenshot(`${name}-date-cal.png`, { animations: 'disabled', caret: 'hide' });
     });
 
     test('projects', async ({ page }) => {
