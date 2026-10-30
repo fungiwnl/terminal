@@ -22,6 +22,7 @@ for (const [command, text] of [
   ['email', 'brianf.iwnl@gmail.com'],
   ['github', 'github.com/fungiwnl'],
   ['linkedin', 'linkedin.com/in/fungiwnl'],
+  ['ozbargain', 'ozbargain.com.au/deals'],
 ]) {
   test(`${command} prints its content`, async ({ page }) => {
     await run(page, command);

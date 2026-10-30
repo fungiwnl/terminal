@@ -101,6 +101,12 @@ https://au.linkedin.com/in/fungiwnl
 https://github.com/fungiwnl
     </template>
 
+    <template id="ozbargain">
+🛒 OzBargain deals:
+
+https://www.ozbargain.com.au/deals
+    </template>
+
     <script>
         const projects = [
             { name: 'Kmart Australia', url: 'https://www.kmart.com.au', type: 'Web/Mobile' },
@@ -151,6 +157,7 @@ https://github.com/fungiwnl
   email      Get in touch
   github     My GitHub profile
   linkedin   My LinkedIn profile
+  ozbargain  Latest OzBargain deals
   weather    Weather where you are
   date       Current date and time
   cal        This month's calendar
@@ -184,6 +191,9 @@ https://github.com/fungiwnl
             },
             linkedin: function() {
                 this.echo(linkedin.innerHTML);
+            },
+            ozbargain: function() {
+                this.echo(ozbargain.innerHTML);
             },
             weather: function() {
                 const term = this;
