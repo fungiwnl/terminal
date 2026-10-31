@@ -171,7 +171,7 @@ test.describe('phone rotated to landscape', () => {
 
   const typing = page => page.evaluate(() => document.activeElement.matches('.cmd-editable'));
 
-  test('hides the keyboard and refocuses back in portrait', async ({ page }) => {
+  test('hides the keyboard, and one tap brings it back in portrait', async ({ page }) => {
     await page.locator('.terminal-output').tap();
     expect(await typing(page)).toBe(true);
 
@@ -179,13 +179,7 @@ test.describe('phone rotated to landscape', () => {
     await expect.poll(() => typing(page)).toBe(false);
 
     await page.setViewportSize({ width: 390, height: 844 });
-    await expect.poll(() => typing(page)).toBe(true);
-  });
-
-  test('stays unfocused in portrait if it was not focused before', async ({ page }) => {
-    await page.setViewportSize({ width: 844, height: 390 });
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.waitForTimeout(100);
-    expect(await typing(page)).toBe(false);
+    await page.locator('.terminal-output').tap();
+    expect(await typing(page)).toBe(true);
   });
 });

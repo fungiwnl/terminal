@@ -267,18 +267,13 @@ https://www.ozbargain.com.au/deals
             prompt: '[[;#a6e3a1;]$] '
         });
 
-        // Same query as the rotate overlay in style.css. Blurring hides the
-        // mobile keyboard; refocusing only reopens it where the browser allows.
-        const phoneLandscape = matchMedia('(orientation: landscape) and (max-height: 600px) and (hover: none)');
-        let hadFocus = false;
-        phoneLandscape.addEventListener('change', e => {
-            if (e.matches) {
-                hadFocus = term.enabled();
-                term.focus(false);
-            } else if (hadFocus) {
-                term.focus();
-            }
-        });
+        // Same query as the rotate overlay in style.css. Blurring hides the mobile
+        // keyboard. Don't refocus back in portrait: iOS won't show the keyboard
+        // without a tap, and a tap on a focused terminal closes it instead.
+        matchMedia('(orientation: landscape) and (max-height: 600px) and (hover: none)')
+            .addEventListener('change', e => {
+                if (e.matches) term.focus(false);
+            });
     </script>
 </body>
 </html>
