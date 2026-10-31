@@ -41,6 +41,8 @@ Builds the site into `_site/` and serves it on http://localhost:8080. Needs Pyth
 
 ## Tests
 
+Needs Node 26 (see `.nvmrc`).
+
 ```sh
 npm install
 npx playwright install chromium
