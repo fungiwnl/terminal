@@ -165,3 +165,27 @@ test.describe('date and cal', () => {
     await expect(output).toContainText("This month's calendar");
   });
 });
+
+test.describe('phone rotated to landscape', () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  const typing = page => page.evaluate(() => document.activeElement.matches('.cmd-editable'));
+
+  test('hides the keyboard and refocuses back in portrait', async ({ page }) => {
+    await page.locator('.terminal-output').tap();
+    expect(await typing(page)).toBe(true);
+
+    await page.setViewportSize({ width: 844, height: 390 });
+    await expect.poll(() => typing(page)).toBe(false);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await expect.poll(() => typing(page)).toBe(true);
+  });
+
+  test('stays unfocused in portrait if it was not focused before', async ({ page }) => {
+    await page.setViewportSize({ width: 844, height: 390 });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.waitForTimeout(100);
+    expect(await typing(page)).toBe(false);
+  });
+});

@@ -146,7 +146,7 @@ https://www.ozbargain.com.au/deals
             return `${project.name} (${project.type})`;
         }
 
-        $('body').terminal({
+        const term = $('body').terminal({
             help: function() {
                 this.echo(`
 📋 Available commands:
@@ -265,6 +265,19 @@ https://www.ozbargain.com.au/deals
                 term.error(`zsh: command not found: ${name}`);
             },
             prompt: '[[;#a6e3a1;]$] '
+        });
+
+        // Same query as the rotate overlay in style.css. Blurring hides the
+        // mobile keyboard; refocusing only reopens it where the browser allows.
+        const phoneLandscape = matchMedia('(orientation: landscape) and (max-height: 600px) and (hover: none)');
+        let hadFocus = false;
+        phoneLandscape.addEventListener('change', e => {
+            if (e.matches) {
+                hadFocus = term.enabled();
+                term.focus(false);
+            } else if (hadFocus) {
+                term.focus();
+            }
         });
     </script>
 </body>
