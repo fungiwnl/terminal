@@ -4,7 +4,7 @@ module.exports = defineConfig({
   testDir: 'tests',
   use: { baseURL: 'http://localhost:8080' },
   webServer: {
-    command: 'python3 -m http.server 8080',
+    command: 'npm start',
     url: 'http://localhost:8080',
     reuseExistingServer: true,
     stderr: 'ignore',

@@ -3,3 +3,4 @@ test-results/
 playwright-report/
 Session.vim
 .DS_Store
+_site/

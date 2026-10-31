@@ -1,6 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build": "rm -rf _site && mkdir _site && cp -R src/. assets _site/",
+    "start": "npm run build && python3 -m http.server 8080 -d _site",
     "test": "playwright test",
     "prepare": "git config core.hooksPath .githooks",
     "test:update": "playwright test tests/visual.spec.js --update-snapshots"
